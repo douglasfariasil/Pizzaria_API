@@ -1,14 +1,20 @@
 from fastapi import FastAPI
+from dotenv import load_dotenv
+import os
 
 from pizzaria_api.autenticacao.auth_routes import auth_router
 from pizzaria_api.pedidos.order_routes import order_router
+from pizzaria_api.utils.security import bcrypt_context
 
-app = FastAPI(title="PizzariaAPI")
 
-if __name__ == "__main__":
-    import uvicorn
+load_dotenv()
 
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, log_level="info", reload=True)
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+app = FastAPI()
+
+
 
 app.include_router(auth_router)
 app.include_router(order_router)

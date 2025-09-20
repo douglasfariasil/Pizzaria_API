@@ -75,4 +75,5 @@ class ItemPedido(Base):
 # Criar uma sessão para interagir com o banco de dados
 
 
-# alembic revise --autogenerate -m "Initial migration"
+# alembic revision --autogenerate -m "Initial migration" é o comando para criar a migration e o comentario "" 
+
