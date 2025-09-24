@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from pizzaria_api.dependencies.dependencies import pegar_sessao
-from pizzaria_api.schemas import PedidoSchema
+from pizzaria_api.schemas.schemas import PedidoSchema
 from pizzaria_api.autenticacao.models import Pedido
 
 order_router = APIRouter(prefix="/orders", tags=["Pedidos"])
@@ -15,9 +15,7 @@ async def pedido():
 async def criar_pedido(pedido_schema: PedidoSchema, session: Session = Depends(pegar_sessao)):
     novo_pedido = Pedido(
         usuario_id=pedido_schema.usuario_id,
-        itens=pedido_schema.itens,
-        # status="PENDENTE",
-        # preco=pedido_schema.preco
+        itens=pedido_schema.itens
     )
     session.add(novo_pedido)
     session.commit()

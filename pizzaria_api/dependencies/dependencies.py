@@ -1,5 +1,10 @@
-from sqlalchemy.orm import sessionmaker
+from fastapi import Depends, HTTPException
+from pizzaria_api.utils.security import SECRET_KEY, ALGORITHM, oauth2_scheme
+from sqlalchemy.orm import sessionmaker, Session
 from pizzaria_api.autenticacao.models import db
+from pizzaria_api.autenticacao.models import Usuario
+from jose import jwt, JWTError
+
 
 def pegar_sessao():
     try:
@@ -8,3 +13,16 @@ def pegar_sessao():
         yield session
     finally:
         session.close()
+
+def verificar_token(token: str = Depends(oauth2_scheme), session: Session=Depends(pegar_sessao)):
+    try:
+        dic_info = jwt.decode(token, SECRET_KEY, ALGORITHM)
+        usuario_id = int(dic_info.get("sub"))
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Acesso negado, token inválido ou expirado")
+    usuario = session.query(Usuario).filter(Usuario.id == usuario_id).first()
+    if usuario is None:
+        raise HTTPException(status_code=401, detail="Acesso inválido ou expirado")
+    return usuario
+    # --- IGNORE ---    
+

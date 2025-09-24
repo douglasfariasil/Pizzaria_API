@@ -1,6 +1,8 @@
 from passlib.context import CryptContext
+from fastapi.security import OAuth2PasswordBearer
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login-form")
 
 # Adicione as variáveis abaixo:
 ALGORITHM = "HS256"
