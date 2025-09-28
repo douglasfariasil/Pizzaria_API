@@ -13,9 +13,8 @@ class UsuarioSchema(BaseModel):
         from_attributes = True
 
 class PedidoSchema(BaseModel):
-    usuario_id: int
-    itens: str
-
+    id_usuario: int
+    
     class Config:
         from_attributes = True
 

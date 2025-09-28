@@ -23,3 +23,4 @@ app.include_router(order_router)
 
 
 # para rodar o código no terminal = uvicorn pizzaria_api.main:app --reload
+# http://127.0.0.1:8000/docs
