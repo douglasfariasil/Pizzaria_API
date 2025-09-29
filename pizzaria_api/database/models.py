@@ -57,13 +57,17 @@ class Pedido(Base):
     preco = Column(Float, default=0.0)
 
     dono_pedido = relationship("Usuario", back_populates="pedidos")
-    itens = relationship("ItemPedido", back_populates="pedido_ref")
+    itens = relationship("ItemPedido", 
+    cascade="all, delete", back_populates="pedido_ref")
 
     def __init__(self, usuario_id: int, status="PENDENTE", preco=0.0):
         self.usuario_id = usuario_id
         self.status = status
         self.preco = preco
 
+    def calcular_preco(self):
+        self.preco = sum(item.preco_unitario * item.quantidade for item in self.itens)
+        return self.preco
 
 class ItemPedido(Base):
     __tablename__ = "itens_pedido"
@@ -76,3 +80,10 @@ class ItemPedido(Base):
     tamanho = Column(String, default="M")
 
     pedido_ref = relationship("Pedido", back_populates="itens")
+
+    def __init__(self, quantidade, sabor, preco_unitario, tamanho, pedido_id):
+        self.quantidade = quantidade
+        self.sabor = sabor
+        self.preco_unitario = preco_unitario
+        self.tamanho = tamanho
+        self.pedido_id = pedido_id
