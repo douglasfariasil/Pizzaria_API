@@ -7,7 +7,9 @@ requires-python = ">=3.11.9"
 dependencies = [
     "alembic>=1.16.4",
     "fastapi>=0.116.1",
+    "mysql-connector-python>=9.4.0",
     "passlib[bcrypt]>=1.7.4",
+    "pymysql>=1.1.2",
     "python-dotenv>=1.1.1",
     "python-jose[cryptography]>=3.5.0",
     "python-multipart>=0.0.20",

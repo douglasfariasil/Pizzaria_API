@@ -39,6 +39,9 @@ async def autentica():
 
 @auth_router.post("/criar_conta")
 async def criar_conta(usuario_schema: UsuarioSchema, session: Session = Depends(pegar_sessao)):
+    """
+    Essa é a rota para criar uma nova conta de usuário
+    """
     usuario = session.query(Usuario).filter(Usuario.email == usuario_schema.email).first()
     if usuario:
         raise HTTPException(status_code=400, detail="E-mail do usuário já cadastrado")
@@ -52,6 +55,9 @@ async def criar_conta(usuario_schema: UsuarioSchema, session: Session = Depends(
 # login -> email e senha -> token jwt(json web token)
 @auth_router.post("/login")
 async def login(login_schema: LoginSchema, session: Session = Depends(pegar_sessao)):
+    """
+    Essa é a rota de login do sistema, com E-mail e Senha
+    """
     usuario = autentica_usuario(login_schema.email, login_schema.senha, session)
     if not usuario:
         raise HTTPException(status_code=400, detail="Usuário não encontrado ou credenciais inválidas")
@@ -66,6 +72,9 @@ async def login(login_schema: LoginSchema, session: Session = Depends(pegar_sess
 
 @auth_router.post("/login-form")
 async def login_form(dados_formulario: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(pegar_sessao)):
+    """ 
+    Essa é a rota de login do sistema, com Formulário (OAuth2PasswordRequestForm)
+    """
     usuario = autentica_usuario(dados_formulario.username, dados_formulario.password, session)
     if not usuario:
         raise HTTPException(status_code=400, detail="Usuário não encontrado ou credenciais inválidas")
@@ -78,6 +87,9 @@ async def login_form(dados_formulario: OAuth2PasswordRequestForm = Depends(), se
     
 @auth_router.get("/refresh_token")
 async def use_refresh_token(usuario: Usuario = Depends(verificar_token)):
+    """ 
+    Rota para renovar o token de acesso usando o token de refresh
+    """
     access_token = criar_token(usuario.id)
     return {
         "access_token": access_token,

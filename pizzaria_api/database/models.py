@@ -1,5 +1,4 @@
 from sqlalchemy import (
-    create_engine,
     Column,
     Integer,
     Float,
@@ -8,10 +7,6 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.orm import declarative_base, relationship
-
-
-# Configuração da conexão do banco de dados SQLite
-db = create_engine("sqlite:///pizzaria_api/database/banco.db")
 
 # Base para os modelos do SQLAlchemy
 Base = declarative_base()

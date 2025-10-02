@@ -1,26 +1,35 @@
-from fastapi import Depends, HTTPException
-from pizzaria_api.utils.security import SECRET_KEY, ALGORITHM, oauth2_scheme
-from sqlalchemy.orm import sessionmaker, Session
-from pizzaria_api.database.models import db, Usuario
-from jose import jwt, JWTError
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
+from jose import JWTError, jwt
 
+from pizzaria_api.database.database import SessionLocal
+from pizzaria_api.database.models import Usuario
+from pizzaria_api.utils.security import SECRET_KEY, ALGORITHM
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login-form")
 
 def pegar_sessao():
+    db = SessionLocal()
     try:
-        Session = sessionmaker(bind=db)
-        session = Session()
-        yield session
+        yield db
     finally:
-        session.close()
+        db.close()
 
-def verificar_token(token: str = Depends(oauth2_scheme), session: Session=Depends(pegar_sessao)):
+def verificar_token(token: str = Depends(oauth2_scheme), session: Session = Depends(pegar_sessao)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Não foi possível validar as credenciais",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
-        dic_info = jwt.decode(token, SECRET_KEY, ALGORITHM)
-        usuario = int(dic_info.get("sub"))
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise credentials_exception
+        usuario = session.query(Usuario).filter(Usuario.id == int(user_id)).first()
+        if usuario is None:
+            raise credentials_exception
+        return usuario
     except JWTError:
-        raise HTTPException(status_code=401, detail="Acesso negado, token inválido ou expirado")
-    usuario = session.query(Usuario).filter(Usuario.id == usuario).first()
-    if usuario is None:
-        raise HTTPException(status_code=401, detail="Acesso inválido ou expirado")
-    return usuario
-    # --- IGNORE ---    
+        raise credentials_exception
