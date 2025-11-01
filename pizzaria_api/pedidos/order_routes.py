@@ -153,3 +153,4 @@ async def listar_pedidos_usuario(session: Session = Depends(pegar_sessao), usuar
     """
     pedidos = session.query(Pedido).filter(Pedido.usuario_id == usuario.id).all()
     return pedidos
+    

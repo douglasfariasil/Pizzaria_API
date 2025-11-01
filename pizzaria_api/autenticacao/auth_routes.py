@@ -4,7 +4,7 @@ from pizzaria_api.dependencies.dependencies import pegar_sessao, verificar_token
 from pizzaria_api.utils.security import bcrypt_context, ALGORITHM, SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES
 from pizzaria_api.schemas.schemas import UsuarioSchema, LoginSchema
 from sqlalchemy.orm import Session
-from jose import jwt, JWTError
+from jose import jwt
 from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordRequestForm
 # import requests

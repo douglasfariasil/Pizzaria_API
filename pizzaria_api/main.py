@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
-import os
+
 
 from pizzaria_api.autenticacao.auth_routes import auth_router
 from pizzaria_api.pedidos.order_routes import order_router
