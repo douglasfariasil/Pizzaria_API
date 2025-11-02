@@ -15,5 +15,5 @@ app.include_router(auth_router)
 app.include_router(order_router)
 
 
-# para rodar o código no terminal = uvicorn pizzaria_api.main:app --reload// a nova uvicorn pizzaria_api.main:app --reload --port 8001
-# http://127.0.0.1:8000/docs
+# para rodar o código no terminal = uvicorn pizzaria_api.main:app --reload --port 8001
+# Guia da URLs: http://127.0.0.1:8000/docs
