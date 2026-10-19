@@ -15,8 +15,11 @@ def pegar_sessao():
         yield db
     finally:
         db.close()
+    db.close() 
 
-def verificar_token(token: str = Depends(oauth2_scheme), session: Session = Depends(pegar_sessao)):
+def verificar_token(token: str = Depends(
+        oauth2_scheme), session: Session = Depends(pegar_sessao)
+    ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Não foi possível validar as credenciais",
@@ -33,3 +36,4 @@ def verificar_token(token: str = Depends(oauth2_scheme), session: Session = Depe
         return usuario
     except JWTError:
         raise credentials_exception
+
